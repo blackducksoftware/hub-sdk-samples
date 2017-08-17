@@ -9,31 +9,16 @@ import com.blackducksoftware.integration.hub.api.codelocation.CodeLocationReques
 import com.blackducksoftware.integration.hub.model.view.CodeLocationView;
 import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
 import com.blackducksoftware.integration.hub.service.HubServicesFactory;
-import com.blackducksoftware.integration.log.IntLogger;
-import com.blackducksoftware.integration.test.TestLogger;
 
 
 /**
  * Sample program to delete all unmapped code locations
- * @author mpeng
  *
  */
-public class SampleDeleteUnmappedCodeLocations {
-
-	private static String serverAddress;
-    private static String username;
-    private static String password;
-    private static HubServicesFactory hubServicesFactory;
-    private static final IntLogger logger = new TestLogger();
-    private static final int timeOut = 10000;
+public class SampleDeleteUnmappedCodeLocations extends AbstractSample{
     
-	/**
-	 * Connects to server.
-	 * @return credentialsRestConnection
-	 * @throws MalformedURLException
-	 * @throws IntegrationException
-	 */
-	public static CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
+	@Override
+	public CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
 		URL serverAddressURL = new URL(serverAddress);
 		CredentialsRestConnection credentialsRestConnection = new CredentialsRestConnection(logger, serverAddressURL, username, password, timeOut);
 		credentialsRestConnection.connect();
@@ -41,11 +26,9 @@ public class SampleDeleteUnmappedCodeLocations {
 		return credentialsRestConnection;
 	}
 	
-	/**
-	 * Parses command line arguments.
-	 * @param args
-	 */
-	public static void parseCommandLineArguments(String args[]){		
+	
+	@Override
+	public void parseCommandLineArguments(String args[]){		
 		try{
 			serverAddress = args[0];
 			username = args[1];
@@ -57,9 +40,10 @@ public class SampleDeleteUnmappedCodeLocations {
 		}
 	}
 	
-	public static void main(String[] args) throws MalformedURLException, IntegrationException {
+	
+	@Override
+	public void execute() throws MalformedURLException, IntegrationException{
 		//connect, and create hubServicesFactory and codeLocationRequestService
-		parseCommandLineArguments(args);
 		CredentialsRestConnection credentialsRestConnection = connect();
 		hubServicesFactory = new HubServicesFactory(credentialsRestConnection);
 		CodeLocationRequestService codeLocationRequestService = hubServicesFactory.createCodeLocationRequestService(logger);
@@ -73,6 +57,12 @@ public class SampleDeleteUnmappedCodeLocations {
 			}
 		}
 		
-		// all unmapped code locations should have been deleted
+		// all unmapped code locations should have been deleted	
+	}
+	
+	public static void main(String[] args) throws MalformedURLException, IntegrationException {
+		SampleDeleteUnmappedCodeLocations sampleDeleteUnmappedCodeLocations = new SampleDeleteUnmappedCodeLocations();
+		sampleDeleteUnmappedCodeLocations.parseCommandLineArguments(args);
+		sampleDeleteUnmappedCodeLocations.execute();
 	}
 }

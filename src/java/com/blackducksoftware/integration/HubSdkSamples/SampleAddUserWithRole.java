@@ -12,22 +12,16 @@ import com.blackducksoftware.integration.hub.model.request.RoleAssignmentRequest
 import com.blackducksoftware.integration.hub.model.request.UserRequest;
 import com.blackducksoftware.integration.hub.model.view.RoleAssignmentView;
 import com.blackducksoftware.integration.hub.model.view.UserView;
-import com.blackducksoftware.integration.hub.request.HubRequestFactory;
 import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
 import com.blackducksoftware.integration.hub.service.HubResponseService;
 import com.blackducksoftware.integration.hub.service.HubServicesFactory;
-import com.blackducksoftware.integration.log.IntLogger;
-import com.blackducksoftware.integration.test.TestLogger;
 
 /**
  * Sample program to create a user and add a role. (uses Role Name, not roleID/URL)
  *
  */
-public class SampleAddUserWithRole {
+public class SampleAddUserWithRole extends AbstractSample{
 	
-	private static String serverAddress;
-    private static String username;
-    private static String password;
     private static Boolean newActive;
     private static String email;
     private static String newFirstName;
@@ -35,18 +29,10 @@ public class SampleAddUserWithRole {
     private static String newUserName;
     private static String newPassword;
     private static String roleName;
-    private static HubServicesFactory hubServicesFactory;
-    private static final IntLogger logger = new TestLogger();
-    private static final int timeOut = 10000;
        
     
-	/**
-	 * Connects to server. Username, password, and server address taken from command line
-	 * @return credentialsRestConnection
-	 * @throws MalformedURLException
-	 * @throws IntegrationException
-	 */
-	public static CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
+    @Override
+	public CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
 		URL serverAddressURL = new URL(serverAddress);
 		CredentialsRestConnection credentialsRestConnection = new CredentialsRestConnection(logger, serverAddressURL, username, password, timeOut);
 		credentialsRestConnection.connect();
@@ -54,11 +40,9 @@ public class SampleAddUserWithRole {
 		return credentialsRestConnection;
 	}
 	
-	/**
-	 * Parses command line arguments.
-	 * @param args
-	 */
-	public static void parseCommandLineArguments(String args[]){		
+    
+    @Override
+	public void parseCommandLineArguments(String args[]){		
 		try{
 			serverAddress = args[0];
 			username = args[1];
@@ -78,17 +62,15 @@ public class SampleAddUserWithRole {
 	}
     
     
-	public static void main(String[] args) throws MalformedURLException, IntegrationException {
-		
-		// connect and create hubServicesFactory
-		parseCommandLineArguments(args);
+    @Override
+    public void execute() throws IntegrationException, MalformedURLException {
+    	// connect and create hubServicesFactory
 		CredentialsRestConnection credentialsRestConnection = connect();
 		hubServicesFactory = new HubServicesFactory(credentialsRestConnection);
 		
 		// create necessary services
 		MetaService metaService = hubServicesFactory.createMetaService(logger);
 		UserRequestService userRequestService = hubServicesFactory.createUserRequestService();
-		HubRequestFactory hubRequestFactory = new HubRequestFactory(credentialsRestConnection);
 		HubResponseService hubResponseService = new HubResponseService(credentialsRestConnection);
 		RoleRequestService roleRequestService = hubServicesFactory.createRoleRequestService(logger);
 		
@@ -119,8 +101,12 @@ public class SampleAddUserWithRole {
 		
 		// add role to user
 		roleRequestService.addRoleForUserPublic(user, roleAssignmentRequest);
-		
-		
+	}
+    
+	public static void main(String[] args) throws MalformedURLException, IntegrationException {
+		SampleAddUserWithRole sampleAddUserWithRole = new SampleAddUserWithRole();
+		sampleAddUserWithRole.parseCommandLineArguments(args);
+		sampleAddUserWithRole.execute();
 	}
 	
 }

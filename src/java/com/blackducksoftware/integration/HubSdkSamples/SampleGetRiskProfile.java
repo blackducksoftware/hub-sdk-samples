@@ -37,32 +37,19 @@ import com.blackducksoftware.integration.hub.model.view.ProjectView;
 import com.blackducksoftware.integration.hub.report.api.ReportData;
 import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
 import com.blackducksoftware.integration.hub.service.HubServicesFactory;
-import com.blackducksoftware.integration.log.IntLogger;
-import com.blackducksoftware.integration.test.TestLogger;
 
 /**
  * Sample program to how to get the risk report data for a project and version
- * @author mpeng
+ *
  *
  */
-public class SampleGetRiskProfile {
+public class SampleGetRiskProfile extends AbstractSample{
 	
-	private static String serverAddress;
-    private static String username;
-    private static String password;
 	private static String projectName;
 	private static String versionName;
-    private static HubServicesFactory hubServicesFactory;
-    private static final IntLogger logger = new TestLogger();
-    private static final int timeOut = 10000;
     
-	/**
-	 * Connects to server. Username, password, and server address taken from command line
-	 * @return credentialsRestConnection
-	 * @throws MalformedURLException
-	 * @throws IntegrationException
-	 */
-	public static CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
+	@Override
+	public CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
 		URL serverAddressURL = new URL(serverAddress);
 		CredentialsRestConnection credentialsRestConnection = new CredentialsRestConnection(logger, serverAddressURL, username, password, timeOut);
 		credentialsRestConnection.connect();
@@ -70,11 +57,9 @@ public class SampleGetRiskProfile {
 		return credentialsRestConnection;
 	}
 	
-	/**
-	 * Parses command line arguments.
-	 * @param args
-	 */
-	public static void parseCommandLineArguments(String args[]){		
+	
+	@Override
+	public void parseCommandLineArguments(String args[]){		
 		try{
 			serverAddress = args[0];
 			username = args[1];
@@ -93,7 +78,7 @@ public class SampleGetRiskProfile {
 	 * @return ProjectView project
 	 * @throws IntegrationException
 	 */
-	public static ProjectView getProject(String projectName) throws IntegrationException {
+	public ProjectView getProject(String projectName) throws IntegrationException {
 		ProjectRequestService projectRequestService = hubServicesFactory.createProjectRequestService(logger);
 		try{
 			ProjectView project = projectRequestService.getProjectByName(projectName);
@@ -112,7 +97,7 @@ public class SampleGetRiskProfile {
 	 * @return ProjectVersionView project
 	 * @throws IntegrationException
 	 */
-	public static ProjectVersionView getVersion(String projectName, String projectVersion) throws IntegrationException{
+	public ProjectVersionView getVersion(String projectName, String projectVersion) throws IntegrationException{
 		ProjectVersionRequestService projectVersionRequestService = hubServicesFactory.createProjectVersionRequestService(logger);
 		try{
 			ProjectVersionView version = projectVersionRequestService.getProjectVersion(getProject(projectName), projectVersion);		
@@ -131,15 +116,14 @@ public class SampleGetRiskProfile {
 	 * @return risk report
 	 * @throws IntegrationException
 	 */
-	public static ReportData getRiskProfile(ProjectView project, ProjectVersionView version) throws IntegrationException {
+	public ReportData getRiskProfile(ProjectView project, ProjectVersionView version) throws IntegrationException {
 		RiskReportDataService riskReportDataService = hubServicesFactory.createRiskReportDataService(logger, 10000);		
 		return riskReportDataService.getRiskReportData(project, version);
 	}
     
-	
-	public static void main(String[] args) throws Exception {
+	@Override
+	public void execute() throws IntegrationException, MalformedURLException{
 		// parse command line arguments, connect and initialize hubServicesFactory
-		parseCommandLineArguments(args);
 		CredentialsRestConnection credentialsRestConnection = connect();
 		hubServicesFactory = new HubServicesFactory(credentialsRestConnection);
 		
@@ -148,5 +132,11 @@ public class SampleGetRiskProfile {
 		System.out.println(reportData.getLicenseRiskHighCount());
 		System.out.println(reportData.getProjectName());
 	}
-
+	
+	
+	public static void main(String[] args) throws MalformedURLException, IntegrationException {		
+		SampleGetRiskProfile sampleGetRiskProfile = new SampleGetRiskProfile();
+		sampleGetRiskProfile.parseCommandLineArguments(args);
+		sampleGetRiskProfile.execute();		
+	}
 }
