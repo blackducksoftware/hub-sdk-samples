@@ -1,7 +1,6 @@
 package com.blackducksoftware.integration.HubSdkSamples;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import com.blackducksoftware.integration.exception.IntegrationException;
@@ -15,9 +14,7 @@ import com.blackducksoftware.integration.hub.model.view.ProjectView;
 import com.blackducksoftware.integration.hub.model.view.VersionBomComponentView;
 import com.blackducksoftware.integration.hub.request.HubPagedRequest;
 import com.blackducksoftware.integration.hub.request.HubRequestFactory;
-import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
 import com.blackducksoftware.integration.hub.service.HubResponseService;
-import com.blackducksoftware.integration.hub.service.HubServicesFactory;
 
 
 /**
@@ -29,15 +26,6 @@ public class SampleGetPolicyStatusForComponent extends AbstractSample{
     private static String projectName;
     private static String versionName;
     private static String componentName;
-
-	public CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
-		URL serverAddressURL = new URL(serverAddress);
-		CredentialsRestConnection credentialsRestConnection = new CredentialsRestConnection(logger, serverAddressURL, username, password, timeOut);
-		credentialsRestConnection.connect();
-		credentialsRestConnection.logger = logger;
-		return credentialsRestConnection;
-	}
-	
 	
 	public void parseCommandLineArguments(String args[]){		
 		try{
@@ -94,11 +82,8 @@ public class SampleGetPolicyStatusForComponent extends AbstractSample{
 	
 	
 	public void execute() throws IntegrationException, MalformedURLException{
-		// set up connection
-		CredentialsRestConnection credentialsRestConnection = connect();
 		
-		//create hubServicesFactory and necessary services
-		hubServicesFactory = new HubServicesFactory(credentialsRestConnection);
+		//create necessary services
 		HubRequestFactory hubRequestFactory = new HubRequestFactory(credentialsRestConnection);
 		HubResponseService hubResponseService = new HubResponseService(credentialsRestConnection);	
 		AggregateBomRequestService bomRequestService = hubServicesFactory.createAggregateBomRequestService(logger);
@@ -136,6 +121,7 @@ public class SampleGetPolicyStatusForComponent extends AbstractSample{
 	public static void main(String[] args) throws MalformedURLException, IntegrationException {
 		SampleGetPolicyStatusForComponent sampleGetPolicyStatusForComponent = new SampleGetPolicyStatusForComponent();
 		sampleGetPolicyStatusForComponent.parseCommandLineArguments(args);
+		sampleGetPolicyStatusForComponent.connect();
 		sampleGetPolicyStatusForComponent.execute();
 	}
 

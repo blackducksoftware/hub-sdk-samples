@@ -1,7 +1,6 @@
 package com.blackducksoftware.integration.HubSdkSamples;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import com.blackducksoftware.integration.exception.IntegrationException;
@@ -12,9 +11,7 @@ import com.blackducksoftware.integration.hub.model.request.RoleAssignmentRequest
 import com.blackducksoftware.integration.hub.model.request.UserRequest;
 import com.blackducksoftware.integration.hub.model.view.RoleAssignmentView;
 import com.blackducksoftware.integration.hub.model.view.UserView;
-import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
 import com.blackducksoftware.integration.hub.service.HubResponseService;
-import com.blackducksoftware.integration.hub.service.HubServicesFactory;
 
 /**
  * Sample program to create a user and add a role. (uses Role Name, not roleID/URL)
@@ -30,16 +27,6 @@ public class SampleAddUserWithRole extends AbstractSample{
     private static String newPassword;
     private static String roleName;
        
-    
-    @Override
-	public CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
-		URL serverAddressURL = new URL(serverAddress);
-		CredentialsRestConnection credentialsRestConnection = new CredentialsRestConnection(logger, serverAddressURL, username, password, timeOut);
-		credentialsRestConnection.connect();
-		credentialsRestConnection.logger = logger;
-		return credentialsRestConnection;
-	}
-	
     
     @Override
 	public void parseCommandLineArguments(String args[]){		
@@ -64,10 +51,7 @@ public class SampleAddUserWithRole extends AbstractSample{
     
     @Override
     public void execute() throws IntegrationException, MalformedURLException {
-    	// connect and create hubServicesFactory
-		CredentialsRestConnection credentialsRestConnection = connect();
-		hubServicesFactory = new HubServicesFactory(credentialsRestConnection);
-		
+	
 		// create necessary services
 		MetaService metaService = hubServicesFactory.createMetaService(logger);
 		UserRequestService userRequestService = hubServicesFactory.createUserRequestService();
@@ -91,12 +75,17 @@ public class SampleAddUserWithRole extends AbstractSample{
 		final List<RoleAssignmentView> allRoles = hubResponseService.getAllItems(serverAddress + "/api/roles", RoleAssignmentView.class);
 
 		// find desired role
-		RoleAssignmentRequest roleAssignmentRequest = new RoleAssignmentRequest();
+		RoleAssignmentRequest roleAssignmentRequest = null;
 		for (RoleAssignmentView roleAssignmentView : allRoles){		
 			if (roleAssignmentView.name.equals(roleName)){
+				roleAssignmentRequest = new RoleAssignmentRequest();
 				roleAssignmentRequest.role = metaService.getHref(roleAssignmentView);
 				break;
 			}
+		}
+		if (roleAssignmentRequest == null){
+        	System.out.println("role " + roleName + " does not exist");
+        	System.exit(2);
 		}
 		
 		// add role to user
@@ -106,6 +95,7 @@ public class SampleAddUserWithRole extends AbstractSample{
 	public static void main(String[] args) throws MalformedURLException, IntegrationException {
 		SampleAddUserWithRole sampleAddUserWithRole = new SampleAddUserWithRole();
 		sampleAddUserWithRole.parseCommandLineArguments(args);
+		sampleAddUserWithRole.connect();
 		sampleAddUserWithRole.execute();
 	}
 	

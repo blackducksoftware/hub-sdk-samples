@@ -1,4 +1,4 @@
-package com.blackducksoftware.integration.hub.api.role;
+package com.blackducksoftware.integration.hub.api.user;
 
 import static com.blackducksoftware.integration.hub.api.UrlConstants.SEGMENT_API;
 import static com.blackducksoftware.integration.hub.api.UrlConstants.SEGMENT_USERS;

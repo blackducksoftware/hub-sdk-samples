@@ -1,6 +1,7 @@
 package com.blackducksoftware.integration.HubSdkSamples;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import com.blackducksoftware.integration.exception.IntegrationException;
 import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
@@ -20,6 +21,7 @@ public abstract class AbstractSample {
 	String username;
 	String password;
 	HubServicesFactory hubServicesFactory;
+	CredentialsRestConnection credentialsRestConnection;
     IntLogger logger = new TestLogger();
     final int timeOut = 10000;
     
@@ -36,7 +38,13 @@ public abstract class AbstractSample {
 	 * @throws MalformedURLException
 	 * @throws IntegrationException
 	 */
-    public abstract CredentialsRestConnection connect() throws MalformedURLException, IntegrationException;
+    public void connect() throws MalformedURLException, IntegrationException {
+		URL serverAddressURL = new URL(serverAddress);
+		credentialsRestConnection = new CredentialsRestConnection(logger, serverAddressURL, username, password, timeOut);
+		credentialsRestConnection.connect();
+		credentialsRestConnection.logger = logger;
+		hubServicesFactory = new HubServicesFactory(credentialsRestConnection);
+    }
     
     /**
      * Executes sample program.

@@ -1,7 +1,6 @@
 package com.blackducksoftware.integration.HubSdkSamples;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +15,7 @@ import com.blackducksoftware.integration.hub.model.view.ProjectView;
 import com.blackducksoftware.integration.hub.model.view.VersionBomComponentView;
 import com.blackducksoftware.integration.hub.request.HubPagedRequest;
 import com.blackducksoftware.integration.hub.request.HubRequestFactory;
-import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
 import com.blackducksoftware.integration.hub.service.HubResponseService;
-import com.blackducksoftware.integration.hub.service.HubServicesFactory;
 import com.google.gson.Gson;
 
 /**
@@ -30,15 +27,6 @@ public class SampleGetComponentMatchedFiles extends AbstractSample{
     private static String projectName;
     private static String versionName;
     private static String componentName;
-    
-    @Override
-	public CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
-		URL serverAddressURL = new URL(serverAddress);
-		CredentialsRestConnection credentialsRestConnection = new CredentialsRestConnection(logger, serverAddressURL, username, password, timeOut);
-		credentialsRestConnection.connect();
-		credentialsRestConnection.logger = logger;
-		return credentialsRestConnection;
-	}
 	
 	@Override
 	public void parseCommandLineArguments(String args[]){		
@@ -94,11 +82,8 @@ public class SampleGetComponentMatchedFiles extends AbstractSample{
 	
 	@Override
 	public void execute() throws MalformedURLException, IntegrationException{
-		// parse command line arguments and connect
-		CredentialsRestConnection credentialsRestConnection = connect();
 		
 		// create necessary services
-		hubServicesFactory = new HubServicesFactory(credentialsRestConnection);
 		HubRequestFactory hubRequestFactory = new HubRequestFactory(credentialsRestConnection);
 		HubResponseService hubResponseService = new HubResponseService(credentialsRestConnection);	
 		AggregateBomRequestService bomRequestService = hubServicesFactory.createAggregateBomRequestService(logger);
@@ -141,6 +126,7 @@ public class SampleGetComponentMatchedFiles extends AbstractSample{
 	public static void main(String[] args) throws Exception {
 		SampleGetComponentMatchedFiles sampleGetComponentMatchedFiles = new SampleGetComponentMatchedFiles();
 		sampleGetComponentMatchedFiles.parseCommandLineArguments(args);
+		sampleGetComponentMatchedFiles.connect();
 		sampleGetComponentMatchedFiles.execute();
 	}
 }

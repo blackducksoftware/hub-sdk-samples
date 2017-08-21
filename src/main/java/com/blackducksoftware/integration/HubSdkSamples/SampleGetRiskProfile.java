@@ -26,7 +26,6 @@
 package com.blackducksoftware.integration.HubSdkSamples;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import com.blackducksoftware.integration.exception.IntegrationException;
 import com.blackducksoftware.integration.hub.api.project.ProjectRequestService;
@@ -35,29 +34,16 @@ import com.blackducksoftware.integration.hub.dataservice.report.RiskReportDataSe
 import com.blackducksoftware.integration.hub.model.view.ProjectVersionView;
 import com.blackducksoftware.integration.hub.model.view.ProjectView;
 import com.blackducksoftware.integration.hub.report.api.ReportData;
-import com.blackducksoftware.integration.hub.rest.CredentialsRestConnection;
-import com.blackducksoftware.integration.hub.service.HubServicesFactory;
 
 /**
  * Sample program to how to get the risk report data for a project and version
- *
  *
  */
 public class SampleGetRiskProfile extends AbstractSample{
 	
 	private static String projectName;
 	private static String versionName;
-    
-	@Override
-	public CredentialsRestConnection connect() throws MalformedURLException, IntegrationException {
-		URL serverAddressURL = new URL(serverAddress);
-		CredentialsRestConnection credentialsRestConnection = new CredentialsRestConnection(logger, serverAddressURL, username, password, timeOut);
-		credentialsRestConnection.connect();
-		credentialsRestConnection.logger = logger;
-		return credentialsRestConnection;
-	}
-	
-	
+		
 	@Override
 	public void parseCommandLineArguments(String args[]){		
 		try{
@@ -123,9 +109,6 @@ public class SampleGetRiskProfile extends AbstractSample{
     
 	@Override
 	public void execute() throws IntegrationException, MalformedURLException{
-		// parse command line arguments, connect and initialize hubServicesFactory
-		CredentialsRestConnection credentialsRestConnection = connect();
-		hubServicesFactory = new HubServicesFactory(credentialsRestConnection);
 		
 		//get risk report Data. ReportData class fields contain risk information.
 		ReportData reportData = getRiskProfile(getProject(projectName), getVersion(projectName, versionName));
@@ -137,6 +120,7 @@ public class SampleGetRiskProfile extends AbstractSample{
 	public static void main(String[] args) throws MalformedURLException, IntegrationException {		
 		SampleGetRiskProfile sampleGetRiskProfile = new SampleGetRiskProfile();
 		sampleGetRiskProfile.parseCommandLineArguments(args);
+		sampleGetRiskProfile.connect();
 		sampleGetRiskProfile.execute();		
 	}
 }

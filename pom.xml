@@ -4,6 +4,10 @@
   <artifactId>HubSdkSamples</artifactId>
   <version>0.0.1</version>
   <name>HubSdkSamples</name>
+  <properties>
+    <source.java.version>1.7</source.java.version>
+    <target.java.version>1.7</target.java.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>com.blackducksoftware.integration</groupId>
@@ -51,7 +55,8 @@
 	</dependencies>
   
   <build>
-		<plugins>
+			
+			<plugins>
 			<plugin>
 		        <groupId>org.codehaus.mojo</groupId>
 		        <artifactId>appassembler-maven-plugin</artifactId>
