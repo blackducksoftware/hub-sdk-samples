@@ -2,7 +2,6 @@ package com.blackducksoftware.integration.HubSdkSamples;
 
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.Map;
 
 import com.blackducksoftware.integration.exception.IntegrationException;
 import com.blackducksoftware.integration.hub.api.aggregate.bom.AggregateBomRequestService;
@@ -17,6 +16,7 @@ import com.blackducksoftware.integration.hub.request.HubPagedRequest;
 import com.blackducksoftware.integration.hub.request.HubRequestFactory;
 import com.blackducksoftware.integration.hub.service.HubResponseService;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 /**
  * Sample program to get the list of matched files for a component
@@ -110,8 +110,14 @@ public class SampleGetComponentMatchedFiles extends AbstractSample{
         
         //create gson and parse out matched files url.
         Gson gson = credentialsRestConnection.gson;
-        Map<String, Object> javaRootMapObject = gson.fromJson(bomComponent.json, Map.class);
-        String matchedFilesUrl = ((Map) ((List) ((Map) ((Map) ((List) javaRootMapObject.get("origins")).get(0)).get("_meta")).get("links")).get(1)).get("href").toString();
+        JsonObject object = gson.fromJson(bomComponent.json, JsonObject.class);
+        String matchedFilesUrl = object.getAsJsonArray("origins")
+        								.get(0).getAsJsonObject()
+        								.getAsJsonObject("_meta")
+        								.getAsJsonArray("links")
+        								.get(1).getAsJsonObject()
+        								.get("href")
+        								.getAsString();
 		
         // get matched files
 		final HubPagedRequest hubPagedRequest = hubRequestFactory.createPagedRequest(matchedFilesUrl);

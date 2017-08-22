@@ -20,7 +20,6 @@ public class CreateUserRequestService extends UserRequestService{
 
 	public CreateUserRequestService(RestConnection restConnection) {
 		super(restConnection);
-		// TODO Auto-generated constructor stub
 	}
 	
 	 public String createUser(final UserRequest user) throws IntegrationException {
