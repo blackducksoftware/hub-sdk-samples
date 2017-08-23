@@ -25,5 +25,13 @@ package com.blackducksoftware.integration.hub.model.request;
 
 public class RoleAssignmentRequest {
 	
-	public String role;
+	private String role;
+	
+	public RoleAssignmentRequest(String role){
+		this.role = role;
+	}
+
+	public String getRole() {
+		return role;
+	}
 }
