@@ -48,7 +48,7 @@ public class SampleGetPolicyStatusForComponent extends AbstractSample{
 	 * @return ProjectView project
 	 * @throws IntegrationException
 	 */
-	public ProjectView getProject(String projectName) throws IntegrationException {
+	private ProjectView getProject(String projectName) throws IntegrationException {
 		ProjectRequestService projectRequestService = hubServicesFactory.createProjectRequestService(logger);
 		try{
 			ProjectView project = projectRequestService.getProjectByName(projectName);
@@ -68,7 +68,7 @@ public class SampleGetPolicyStatusForComponent extends AbstractSample{
 	 * @return ProjectVersionView project
 	 * @throws IntegrationException
 	 */
-	public ProjectVersionView getVersion(String projectName, String projectVersion) throws IntegrationException{
+	private ProjectVersionView getVersion(String projectName, String projectVersion) throws IntegrationException{
 		ProjectVersionRequestService projectVersionRequestService = hubServicesFactory.createProjectVersionRequestService(logger);
 		try{
 			ProjectVersionView version = projectVersionRequestService.getProjectVersion(getProject(projectName), projectVersion);		

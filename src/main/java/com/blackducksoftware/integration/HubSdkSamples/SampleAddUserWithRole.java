@@ -75,8 +75,8 @@ public class SampleAddUserWithRole extends AbstractSample {
         RoleAssignmentRequest roleAssignmentRequest = null;
         for (final RoleAssignmentView roleAssignmentView : allRoles) {
             if (roleAssignmentView.name.equals(roleName)) {
-                roleAssignmentRequest = new RoleAssignmentRequest();
-                roleAssignmentRequest.role = metaService.getHref(roleAssignmentView);
+                final String role = metaService.getHref(roleAssignmentView);
+                roleAssignmentRequest = new RoleAssignmentRequest(role);
                 break;
             }
         }

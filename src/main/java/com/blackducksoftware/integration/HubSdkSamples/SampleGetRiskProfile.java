@@ -64,7 +64,7 @@ public class SampleGetRiskProfile extends AbstractSample{
 	 * @return ProjectView project
 	 * @throws IntegrationException
 	 */
-	public ProjectView getProject(String projectName) throws IntegrationException {
+	 private ProjectView getProject(String projectName) throws IntegrationException {
 		ProjectRequestService projectRequestService = hubServicesFactory.createProjectRequestService(logger);
 		try{
 			ProjectView project = projectRequestService.getProjectByName(projectName);
@@ -83,7 +83,7 @@ public class SampleGetRiskProfile extends AbstractSample{
 	 * @return ProjectVersionView project
 	 * @throws IntegrationException
 	 */
-	public ProjectVersionView getVersion(String projectName, String projectVersion) throws IntegrationException{
+	private ProjectVersionView getVersion(String projectName, String projectVersion) throws IntegrationException{
 		ProjectVersionRequestService projectVersionRequestService = hubServicesFactory.createProjectVersionRequestService(logger);
 		try{
 			ProjectVersionView version = projectVersionRequestService.getProjectVersion(getProject(projectName), projectVersion);		
@@ -102,7 +102,7 @@ public class SampleGetRiskProfile extends AbstractSample{
 	 * @return risk report
 	 * @throws IntegrationException
 	 */
-	public ReportData getRiskProfile(ProjectView project, ProjectVersionView version) throws IntegrationException {
+	private ReportData getRiskProfile(ProjectView project, ProjectVersionView version) throws IntegrationException {
 		RiskReportDataService riskReportDataService = hubServicesFactory.createRiskReportDataService(logger, 10000);		
 		return riskReportDataService.getRiskReportData(project, version);
 	}
